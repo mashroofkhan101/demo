@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUMINA OPTICS | Luxury Vision Experience</title>
+    
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons & Slider -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <style>
+        :root {
+            --bg: #050505;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #00e5ff;
+            --accent-red: #ff3e3e;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+            --font: 'Plus Jakarta Sans', sans-serif;
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background: var(--bg); color: var(--text-white); font-family: var(--font); overflow-x: hidden; }
+
+        /* Custom Cursor */
+        #cursor { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 10000; }
+        #cursor-blur { width: 40px; height: 40px; border: 1px solid var(--accent); border-radius: 50%; position: fixed; pointer-events: none; z-index: 9999; transition: 0.1s; background: rgba(0,229,255,0.05); }
+
+        /* Navbar */
+        nav { position: fixed; top: 0; width: 100%; padding: 30px 8%; display: flex; justify-content: space-between; align-items: center; z-index: 1000; transition: var(--transition); }
+        nav.scrolled { background: rgba(5,5,5,0.8); backdrop-filter: blur(20px); padding: 15px 8%; border-bottom: 1px solid var(--glass-border); }
+        .logo { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; text-decoration: none; color: #fff; }
+        .logo span { color: var(--accent); }
+        .nav-links { display: flex; gap: 40px; list-style: none; }
+        .nav-links a { text-decoration: none; color: var(--text-gray); font-size: 0.9rem; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--accent); }
+
+        /* Hero */
+        .hero { height: 100vh; display: flex; align-items: center; padding: 0 8%; position: relative; }
+        .hero-content { max-width: 800px; z-index: 10; }
+        .hero h1 { font-size: clamp(3rem, 7vw, 5.5rem); line-height: 1; font-weight: 800; margin-bottom: 25px; }
+        .hero p { color: var(--text-gray); font-size: 1.2rem; margin-bottom: 40px; max-width: 600px; }
+        .hero-bg { position: absolute; right: 0; top: 0; width: 50%; height: 100%; z-index: 1; }
+        .hero-bg img { width: 100%; height: 100%; object-fit: cover; mask-image: linear-gradient(to left, black 60%, transparent); }
+
+        /* Buttons */
+        .btn { padding: 16px 35px; border-radius: 50px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 10px; transition: var(--transition); border: 1px solid var(--glass-border); }
+        .btn-primary { background: var(--accent); color: #000; border: none; }
+        .btn-primary:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0, 229, 255, 0.4); }
+
+        /* Sections */
+        section { padding: 140px 8%; position: relative; }
+        .tag { color: var(--accent); letter-spacing: 5px; font-weight: 600; font-size: 0.8rem; display: block; margin-bottom: 20px; }
+        h2 { font-size: 3.5rem; margin-bottom: 50px; font-weight: 800; }
+
+        /* Grid Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--glass); border: 1px solid var(--glass-border); padding: 50px 40px; border-radius: 30px; transition: var(--transition); overflow: hidden; position: relative; }
+        .card:hover { border-color: var(--accent); transform: translateY(-10px); background: rgba(255,255,255,0.06); }
+        .card img { width: 100%; height: 250px; object-fit: cover; border-radius: 20px; margin-bottom: 30px; transition: 0.5s; }
+        .card:hover img { transform: scale(1.05); }
+
+        /* Stats */
+        .stats { display: flex; gap: 60px; margin-top: 50px; }
+        .stat-item h3 { font-size: 3rem; color: var(--accent); }
+        .stat-item p { color: var(--text-gray); text-transform: uppercase; font-size: 0.8rem; letter-spacing: 2px; }
+
+        /* Reveal */
+        .reveal { opacity: 0; transform: translateY(50px); transition: 1s cubic-bezier(0.16, 1, 0.3, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* Contact Form */
+        .contact-container { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; background: var(--glass); padding: 80px; border-radius: 40px; border: 1px solid var(--glass-border); }
+        input, textarea { width: 100%; padding: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 15px; color: #fff; margin-bottom: 20px; outline: none; }
+        input:focus { border-color: var(--accent); }
+
+        @media (max-width: 768px) {
+            .nav-links, .hero-bg { display: none; }
+            .hero-content { text-align: center; }
+            .contact-container { grid-template-columns: 1fr; padding: 40px; }
+            h2 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="cursor"></div>
+    <div id="cursor-blur"></div>
+
+    <nav id="navbar">
+        <a href="#" class="logo">LUMINA<span>.</span></a>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#collection">Collections</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <a href="#contact" class="btn btn-primary" style="padding: 10px 25px; font-size: 0.9rem;">Book Eye Test</a>
+    </nav>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <span class="tag reveal">LUXURY OPTICAL EXPERIENCE</span>
+            <h1 class="reveal">Clarity Meets <br><span style="color: var(--accent);">Modern Elegance.</span></h1>
+            <p class="reveal">Step into the future of vision. We provide world-class eye testing and a curated selection of premium eyewear from global icons.</p>
+            <div class="reveal">
+                <a href="#collection" class="btn btn-primary">View Collections <i data-lucide="arrow-right"></i></a>
+            </div>
+        </div>
+        <div class="hero-bg">
+            <img src="https://images.unsplash.com/photo-1574258495973-f010dfbb5371?auto=format&fit=crop&q=80&w=1000" alt="Premium Eyewear">
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="grid">
+            <div class="reveal">
+                <span class="tag">OUR STORY</span>
+                <h2>Redefining <br>Optical Care</h2>
+                <p style="color: var(--text-gray); margin-bottom: 30px;">Founded on the principles of precision and style, Lumina Optics has served over 10,000 clients with bespoke vision solutions. Our showroom combines clinical excellence with a luxury boutique atmosphere.</p>
+                <div class="stats">
+                    <div class="stat-item"><h3>10+</h3><p>Years</p></div>
+                    <div class="stat-item"><h3>50+</h3><p>Brands</p></div>
+                    <div class="stat-item"><h3>100%</h3><p>Precision</p></div>
+                </div>
+            </div>
+            <div class="reveal">
+                <img src="https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&q=80&w=800" alt="Showroom" style="width: 100%; border-radius: 40px; border: 1px solid var(--glass-border);">
+            </div>
+        </div>
+    </section>
+
+    <section id="collection" style="background: rgba(255,255,255,0.02);">
+        <span class="tag" style="text-align: center; display: block;">THE COLLECTION</span>
+        <h2 style="text-align: center;">Curated For You</h2>
+        <div class="grid">
+            <div class="card reveal">
+                <img src="https://images.unsplash.com/photo-1508243529287-e21914713191?auto=format&fit=crop&q=80&w=600" alt="Sun">
+                <h3>Aviator Series</h3>
+                <p style="color: var(--text-gray);">Premium UV400 Protection.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.1s;">
+                <img src="https://images.unsplash.com/photo-1591076482161-42ce6da69f67?auto=format&fit=crop&q=80&w=600" alt="Optical">
+                <h3>Executive Prescription</h3>
+                <p style="color: var(--text-gray);">Blue-cut digital lenses.</p>
+            </div>
+            <div class="card reveal" style="transition-delay: 0.2s;">
+                <img src="https://images.unsplash.com/photo-1516211697506-8360bd7734b7?auto=format&fit=crop&q=80&w=600" alt="Design">
+                <h3>Minimalist Frames</h3>
+                <p style="color: var(--text-gray);">Ultra-light titanium tech.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container reveal">
+            <div>
+                <span class="tag">CONTACT</span>
+                <h2 style="margin-bottom: 20px;">Ready for a <br>New Vision?</h2>
+                <p style="color: var(--text-gray);">Book your computerized eye test today or visit us for a free frame adjustment.</p>
+                <div style="margin-top: 40px;">
+                    <p><i data-lucide="phone" style="color: var(--accent); vertical-align: middle; margin-right: 10px;"></i> +1 (234) 567 890</p>
+                    <p style="margin-top: 15px;"><i data-lucide="map-pin" style="color: var(--accent); vertical-align: middle; margin-right: 10px;"></i> 5th Avenue, Luxury District, NY</p>
+                </div>
+            </div>
+            <form>
+                <input type="text" placeholder="Full Name" required>
+                <input type="email" placeholder="Email Address" required>
+                <textarea rows="4" placeholder="Your Message"></textarea>
+                <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; cursor: pointer;">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <footer style="padding: 60px 8%; text-align: center; border-top: 1px solid var(--glass-border); color: var(--text-gray);">
+        <a href="#" class="logo" style="margin-bottom: 20px; display: block;">LUMINA<span>.</span></a>
+        <p>&copy; 2026 Lumina Luxury Optics. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+
+        // Custom Cursor
+        const cursor = document.getElementById('cursor');
+        const blur = document.getElementById('cursor-blur');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+            blur.style.left = e.clientX - 16 + 'px';
+            blur.style.top = e.clientY - 16 + 'px';
+        });
+
+        // Navbar Scroll
+        window.onscroll = () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 100) nav.classList.add('scrolled');
+            else nav.classList.remove('scrolled');
+            reveal();
+        };
+
+        // Scroll Reveal
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                if (elementTop < windowHeight - 100) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        reveal(); // Run on load
+    </script>
+</body>
+</html>
